@@ -32,16 +32,36 @@ app.use(express.urlencoded({ extended: true }));
 // static assets, useful for front-end specific files like images, style sheets, and JS files.
 app.use(express.static(path.join(__dirname, 'public')));
 
-// turn on routes
+// ** Routes **
+// root(/), /dashboard, /api
+// =============================================================
 app.use(routes);
 
-// turn on connection to db and server
-sequelize.sync({ force: false })
+
+// ** Authenticate to DB **
+// =============================================================
+sequelize.authenticate()
     .then(() => {
-        app.listen(PORT, () => console.log('Now Listening'));
+        sequelize.sync({ force: false })
+            .then(() => {
+                app.listen(PORT, () => console.log('Now Listening'));
+            });
     })
     .catch((error) => {
-        console.log(`-------------- error: catch on sequelize.sync() ------------------------`);
-        console.log(error);
-        console.log(`------------------------------------------------------------------------`);
+        console.error('Unable to connect to the database:', error.message);
+        console.log(`... this error is MOST likely because the local mySql server is not running `);
     });
+
+
+
+// turn on connection to db and server
+// sequelize.sync({ force: false })
+//     .then(() => {
+//         app.listen(PORT, () => console.log('Now Listening'));
+//     })
+//     .catch((error) => {
+//         console.log(`\n-------------- error message: catch on sequelize.sync() ------------------------`);
+//         console.log(error.message);
+//         console.log(`... this error is MOST likely because the local mySql server is not running `);
+//         console.log(`--------------- end error message ----------------------------------------------\n`);
+//     });
