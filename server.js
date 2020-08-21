@@ -33,12 +33,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ** Routes **
-// root(/), /dashboard, /api
 // =============================================================
 app.use(routes);
 
-
-// ** Authenticate to DB **
+// ** Authenticate to DB, then sync **
 // =============================================================
 sequelize.authenticate()
     .then(() => {
