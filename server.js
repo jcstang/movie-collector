@@ -9,13 +9,13 @@ const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 const sess = {
-    secret: 'Super secret secret',
-    cookie: {},
-    resave: true,
-    saveUninitialized: false,
-    store: new SequelizeStore({
-        db: sequelize
-    })
+  secret: 'Super secret secret',
+  cookie: {},
+  resave: true,
+  saveUninitialized: false,
+  store: new SequelizeStore({
+    db: sequelize,
+  }),
 };
 
 const app = express();
@@ -38,19 +38,19 @@ app.use(routes);
 
 // ** Authenticate to DB, then sync **
 // =============================================================
-sequelize.authenticate()
-    .then(() => {
-        sequelize.sync({ force: false })
-            .then(() => {
-                app.listen(PORT, () => console.log('Now Listening'));
-            });
-    })
-    .catch((error) => {
-        console.error('Unable to connect to the database:', error.message);
-        console.log(`... this error is MOST likely because the local mySql server is not running `);
+sequelize
+  .authenticate()
+  .then(() => {
+    sequelize.sync({ force: false }).then(() => {
+      app.listen(PORT, () => console.log('Now Listening'));
     });
-
-
+  })
+  .catch((error) => {
+    console.error('Unable to connect to the database:', error.message);
+    console.log(
+      `... this error is MOST likely because the local mySql server is not running `
+    );
+  });
 
 // turn on connection to db and server
 // sequelize.sync({ force: false })
